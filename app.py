@@ -17,6 +17,13 @@ except Exception as e:
     print(f"❌ Error loading models: {e}")
     print("Make sure .pkl files are in the same folder as app.py")
 
+@app.route("/", methods=["GET"])
+def health():
+    return jsonify({
+        "status": "Backend running",
+        "model_loaded": True
+    })
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
@@ -47,6 +54,7 @@ def predict():
         print(f"Prediction Error: {e}")
         return jsonify({"success": False, "error": str(e)})
 
-if __name__ == '__main__':
-    # Run on port 5000
-    app.run(port=5000, debug=True)
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
